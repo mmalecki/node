@@ -606,7 +606,9 @@ Handle<Value> SecureContext::Close(const Arguments& args) {
 int Connection::HandleBIOError(BIO *bio, const char* func, int rv) {
   if (rv >= 0) return rv;
 
+#ifdef SSL_PRINT_DEBUG
   int retry = BIO_should_retry(bio);
+#endif
 
   if (BIO_should_write(bio)) {
     DEBUG_PRINT("[%p] BIO: %s want write. should retry %d\n", ssl_, func, retry);
