@@ -117,6 +117,9 @@ using namespace v8;
   SLURP_INT(_##conn, port, &conn.port);
 
 
+static Persistent<String> x_forwarded_for_string;
+static Persistent<String> host_string;
+
 Handle<Value> DTRACE_NET_SERVER_CONNECTION(const Arguments& args) {
   if (!NODE_NET_SERVER_CONNECTION_ENABLED())
     return Undefined();
@@ -205,11 +208,22 @@ Handle<Value> DTRACE_HTTP_SERVER_REQUEST(const Arguments& args) {
     return (ThrowException(Exception::Error(String::New("expected "
       "object for request to contain string member headers"))));
 
-  Local<Value> strfwdfor = headers->Get(String::New("x-forwarded-for"));
+  if (x_forwarded_for_string.IsEmpty()) {
+    x_forwarded_for_string = Persistent<String>::New(String::New("x-forwarded-for"));
+    host_string = Persistent<String>::New(String::New("host"));
+  }
+
+  Local<Value> strfwdfor = headers->Get(x_forwarded_for_string);
   String::Utf8Value fwdfor(strfwdfor);
 
   if (!strfwdfor->IsString() || (req.forwardedFor = *fwdfor) == NULL)
     req.forwardedFor = const_cast<char*>("");
+
+  Local<Value> strhost = headers->Get(host_string);
+  String::Utf8Value host(strhost);
+
+  if (!strhost->IsString() || (req.host = *host) == NULL)
+    req.host = const_cast<char*>("");
 
   SLURP_CONNECTION(args[1], conn);
 

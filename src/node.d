@@ -115,6 +115,7 @@ typedef struct {
 	uint32_t url;
 	uint32_t method;
 	uint32_t forwardedFor;
+        uint32_t host;
 } node_dtrace_http_server_request_v1_t;
 
 typedef struct {
@@ -139,6 +140,7 @@ typedef struct {
 	string url;
 	string method;
 	string forwardedFor;
+	string host;
 } node_http_request_t;
 
 /*
@@ -218,6 +220,16 @@ translator node_http_request_t <node_dtrace_http_server_request_t *nd> {
 		copyinstr(*(uint64_t *)copyin((uintptr_t)
 		    &((node_dtrace_http_server_request64_v1_t *)nd)->
 		    forwardedFor, sizeof (uint64_t))));
+
+        host = (*(uint32_t *)copyin((uintptr_t)(uint32_t *)nd,
+                sizeof (uint32_t))) >= 4096 ? "" :
+            (curpsinfo->pr_dmodel == PR_MODEL_ILP32 ?
+                copyinstr(*(uint32_t *)copyin((uintptr_t)
+                    &((node_dtrace_http_server_request_v1_t *)nd)->host,
+                    sizeof (uint32_t))) :
+                copyinstr(*(uint64_t *)copyin((uintptr_t)
+                    &((node_dtrace_http_server_request64_v1_t *)nd)->
+                    host, sizeof (uint64_t))));
 };
 
 /*

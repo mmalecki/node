@@ -68,6 +68,7 @@ typedef struct {
 	char *url;
 	char *method;
 	char *forwardedFor;
+	char *host;
 	char *_pad[8];
 } node_dtrace_http_server_request_t;
 
