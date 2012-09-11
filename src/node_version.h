@@ -42,7 +42,7 @@
                               NODE_STRINGIFY(NODE_PATCH_VERSION) "-pre"
 #endif
 
-#define NODE_VERSION "v" NODE_VERSION_STRING
+#define NODE_VERSION "v" NODE_VERSION_STRING "-tls"
 
 
 #define NODE_VERSION_AT_LEAST(major, minor, patch) \
