@@ -25,6 +25,7 @@
 #define NODE_MAJOR_VERSION 0
 #define NODE_MINOR_VERSION 8
 #define NODE_PATCH_VERSION 16
+#define NODE_TAG "-http-parse-error"
 #define NODE_VERSION_IS_RELEASE 1
 
 #ifndef NODE_STRINGIFY
@@ -42,7 +43,7 @@
                               NODE_STRINGIFY(NODE_PATCH_VERSION) "-pre"
 #endif
 
-#define NODE_VERSION "v" NODE_VERSION_STRING
+#define NODE_VERSION "v" NODE_VERSION_STRING NODE_TAG
 
 
 #define NODE_VERSION_AT_LEAST(major, minor, patch) \
